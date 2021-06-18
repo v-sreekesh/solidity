@@ -105,6 +105,7 @@ void FuzzerUtil::testCompiler(
 		compiler.setModelCheckerSettings({
 			frontend::ModelCheckerContracts::Default(),
 			frontend::ModelCheckerEngine::All(),
+			frontend::ModelCheckerExtCalls{},
 			frontend::ModelCheckerTargets::Default(),
 			/*timeout=*/1
 		});
