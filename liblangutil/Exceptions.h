@@ -114,11 +114,22 @@ public:
 	enum class Type
 	{
 		CodeGenerationError,
+		CompilerError,
 		DeclarationError,
 		DocstringParsingError,
+		Exception,
+		FatalError,
+		Info,
+		InterfaceError,
+		InternalCompilerError,
+		IOError,
+		JSONError,
 		ParserError,
-		TypeError,
+		SMTLogicException,
 		SyntaxError,
+		TypeError,
+		UnimplementedFeatureError,
+		YulException,
 		Warning
 	};
 
@@ -144,15 +155,84 @@ public:
 		}
 		return nullptr;
 	}
-	static bool containsOnlyWarnings(ErrorList const& _list)
+
+	static bool isError(Type _type)
+	{
+		return _type != Type::Info && _type != Type::Warning;
+	}
+
+	static bool containsErrors(ErrorList const& _list)
 	{
 		for (auto e: _list)
-		{
-			if (e->type() != Type::Warning)
-				return false;
-		}
-		return true;
+			if (isError(e->type()))
+				return true;
+		return false;
 	}
+
+	static std::string formatErrorType(Type _type)
+	{
+		switch (_type)
+		{
+		case Type::CodeGenerationError:
+			return "CodeGenerationError";
+		case Type::CompilerError:
+			return "CompilerError";
+		case Type::DeclarationError:
+			return "DeclarationError";
+		case Type::DocstringParsingError:
+			return "DocstringParsingError";
+		case Type::Exception:
+			return "Exception";
+		case Type::FatalError:
+			return "FatalError";
+		case Type::Info:
+			return "Info";
+		case Type::InterfaceError:
+			return "InterfaceError";
+		case Type::InternalCompilerError:
+			return "InternalCompilerError";
+		case Type::IOError:
+			return "IOError";
+		case Type::JSONError:
+			return "JSONError";
+		case Type::ParserError:
+			return "ParserError";
+		case Type::SMTLogicException:
+			return "SMTLogicException";
+		case Type::SyntaxError:
+			return "SyntaxError";
+		case Type::TypeError:
+			return "TypeError";
+		case Type::UnimplementedFeatureError:
+			return "UnimplementedFeatureError";
+		case Type::YulException:
+			return "YulException";
+		case Type::Warning:
+			return "Warning";
+		}
+		solAssert(false, "");
+	}
+
+	static std::string formatErrorCategory(Type _type)
+	{
+		if (_type == Type::Info)
+			return "Info";
+		if (_type == Type::Warning)
+			return "Warning";
+		solAssert(isError(_type), "");
+		return "Error";
+	}
+
+	static std::string formatErrorCategoryLowercase(Type _type)
+	{
+		if (_type == Type::Info)
+			return "info";
+		if (_type == Type::Warning)
+			return "warning";
+		solAssert(isError(_type), "");
+		return "error";
+	}
+
 private:
 	ErrorId m_errorId;
 	Type m_type;

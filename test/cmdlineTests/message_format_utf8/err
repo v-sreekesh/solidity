@@ -33,4 +33,3 @@ Warning: Function state mutability can be restricted to pure
    |
 12 | 	function selector() public returns(uint) { // starts with tab
    | 	^ (Relevant source part starts here and spans across multiple lines).
-
