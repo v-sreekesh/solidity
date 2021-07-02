@@ -33,11 +33,4 @@ contract C {
 // ====
 // SMTEngine: chc
 // ----
-// Warning 4984: (176-179): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
-// Warning 4281: (435-447): CHC: Division by zero might happen here.
-// Warning 4984: (467-478): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
-// Warning 4281: (495-507): CHC: Division by zero might happen here.
-// Warning 4984: (529-537): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
-// Warning 4984: (550-561): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
-// Warning 3944: (579-591): CHC: Underflow (resulting value less than 0) might happen here.
-// Warning 4984: (616-624): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
+// Warning 5840: CHC: 8 verification condition(s) could not be proved. Enable the model checker option "show unproved" to see all of them. Consider choosing a specific contract to be verified in order to reduce the solving problems. Consider increasing the timeout per query.
