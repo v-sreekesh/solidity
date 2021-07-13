@@ -1,1 +1,1 @@
-No input files given. If you wish to use the standard input please specify "-" explicitly.
+Invalid option for --model-checker-ext-calls: model_checker_ext_calls_empty_arg/input.sol
