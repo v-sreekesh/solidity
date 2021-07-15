@@ -87,6 +87,7 @@ static string const g_strMetadataHash = "metadata-hash";
 static string const g_strMetadataLiteral = "metadata-literal";
 static string const g_strModelCheckerContracts = "model-checker-contracts";
 static string const g_strModelCheckerEngine = "model-checker-engine";
+static string const g_strModelCheckerExtCalls = "model-checker-ext-calls";
 static string const g_strModelCheckerShowUnproved = "model-checker-show-unproved";
 static string const g_strModelCheckerSolvers = "model-checker-solvers";
 static string const g_strModelCheckerTargets = "model-checker-targets";
@@ -694,6 +695,12 @@ General Information)").c_str(),
 			"Select model checker engine."
 		)
 		(
+			g_strModelCheckerExtCalls.c_str(),
+			po::value<string>()->value_name("untrusted,trusted")->default_value("untrusted"),
+			"Select whether external calls should be considered untrusted or trusted"
+			" if the called function's code is available."
+		)
+		(
 			g_strModelCheckerShowUnproved.c_str(),
 			po::value<bool>()->value_name("false,true")->default_value(false),
 			"Select whether to show all unproved targets."
@@ -1074,6 +1081,7 @@ General Information)").c_str(),
 		m_options.modelChecker.settings.engine = *engine;
 	}
 
+<<<<<<< HEAD
 	if (m_args.count(g_strModelCheckerShowUnproved))
 	{
 		bool showUnproved = m_args[g_strModelCheckerShowUnproved].as<bool>();
@@ -1090,6 +1098,18 @@ General Information)").c_str(),
 			return false;
 		}
 		m_options.modelChecker.settings.solvers = *solvers;
+=======
+	if (m_args.count(g_strModelCheckerExtCalls))
+	{
+		string mode = m_args[g_strModelCheckerExtCalls].as<string>();
+		optional<ModelCheckerExtCalls> extCallsMode = ModelCheckerExtCalls::fromString(mode);
+		if (!extCallsMode)
+		{
+			serr() << "Invalid option for --" << g_strModelCheckerExtCalls << ": " << mode << endl;
+			return false;
+		}
+		m_options.modelChecker.settings.externalCalls = *extCallsMode;
+>>>>>>> smt_trusted
 	}
 
 	if (m_args.count(g_strModelCheckerTargets))
@@ -1111,8 +1131,12 @@ General Information)").c_str(),
 	m_options.modelChecker.initialize =
 		m_args.count(g_strModelCheckerContracts) ||
 		m_args.count(g_strModelCheckerEngine) ||
+<<<<<<< HEAD
 		m_args.count(g_strModelCheckerShowUnproved) ||
 		m_args.count(g_strModelCheckerSolvers) ||
+=======
+		m_args.count(g_strModelCheckerExtCalls) ||
+>>>>>>> smt_trusted
 		m_args.count(g_strModelCheckerTargets) ||
 		m_args.count(g_strModelCheckerTimeout);
 	m_options.output.experimentalViaIR = (m_args.count(g_strExperimentalViaIR) > 0);

@@ -109,10 +109,26 @@ struct ModelCheckerTargets
 	std::set<VerificationTargetType> targets;
 };
 
+struct ModelCheckerExtCalls
+{
+	enum class Mode
+	{
+		UNTRUSTED,
+		TRUSTED
+	};
+
+	Mode mode = Mode::UNTRUSTED;
+
+	static std::optional<ModelCheckerExtCalls> fromString(std::string const& _mode);
+
+	bool isTrusted() const { return mode == Mode::TRUSTED; }
+};
+
 struct ModelCheckerSettings
 {
 	ModelCheckerContracts contracts = ModelCheckerContracts::Default();
 	ModelCheckerEngine engine = ModelCheckerEngine::None();
+	ModelCheckerExtCalls externalCalls = {};
 	bool showUnproved = false;
 	smtutil::SMTSolverChoice solvers = smtutil::SMTSolverChoice::All();
 	ModelCheckerTargets targets = ModelCheckerTargets::Default();

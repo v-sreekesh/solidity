@@ -105,6 +105,7 @@ void FuzzerUtil::testCompiler(
 		compiler.setModelCheckerSettings({
 			frontend::ModelCheckerContracts::Default(),
 			frontend::ModelCheckerEngine::All(),
+			frontend::ModelCheckerExtCalls{},
 			/*showUnproved=*/false,
 			smtutil::SMTSolverChoice::All(),
 			frontend::ModelCheckerTargets::Default(),
