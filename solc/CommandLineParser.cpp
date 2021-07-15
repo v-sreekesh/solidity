@@ -89,6 +89,7 @@ static string const g_strModelCheckerContracts = "model-checker-contracts";
 static string const g_strModelCheckerDivModSlacks = "model-checker-div-mod-slacks";
 static string const g_strModelCheckerEngine = "model-checker-engine";
 static string const g_strModelCheckerExtCalls = "model-checker-ext-calls";
+static string const g_strModelCheckerInvariants = "model-checker-invariants";
 static string const g_strModelCheckerShowUnproved = "model-checker-show-unproved";
 static string const g_strModelCheckerSolvers = "model-checker-solvers";
 static string const g_strModelCheckerTargets = "model-checker-targets";
@@ -708,6 +709,11 @@ General Information)").c_str(),
 			" if the called function's code is available."
 		)
 		(
+			g_strModelCheckerInvariants.c_str(),
+			po::value<bool>()->default_value(false),
+			"Select whether to report inferred inductive invariants."
+		)
+		(
 			g_strModelCheckerShowUnproved.c_str(),
 			po::value<bool>()->value_name("false,true")->default_value(false),
 			"Select whether to show all unproved targets."
@@ -1106,6 +1112,12 @@ General Information)").c_str(),
 		m_options.modelChecker.settings.externalCalls = *extCallsMode;
 	}
 
+	if (m_args.count(g_strModelCheckerInvariants))
+	{
+		bool invariants = m_args[g_strModelCheckerInvariants].as<bool>();
+		m_options.modelChecker.settings.invariants = invariants;
+	}
+
 	if (m_args.count(g_strModelCheckerShowUnproved))
 	{
 		bool showUnproved = m_args[g_strModelCheckerShowUnproved].as<bool>();
@@ -1145,6 +1157,7 @@ General Information)").c_str(),
 		m_args.count(g_strModelCheckerDivModSlacks) ||
 		m_args.count(g_strModelCheckerEngine) ||
 		m_args.count(g_strModelCheckerExtCalls) ||
+		m_args.count(g_strModelCheckerInvariants) ||
 		m_args.count(g_strModelCheckerShowUnproved) ||
 		m_args.count(g_strModelCheckerSolvers) ||
 		m_args.count(g_strModelCheckerTargets) ||

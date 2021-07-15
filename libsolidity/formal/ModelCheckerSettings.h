@@ -136,6 +136,7 @@ struct ModelCheckerSettings
 	bool divModWithSlacks = true;
 	ModelCheckerEngine engine = ModelCheckerEngine::None();
 	ModelCheckerExtCalls externalCalls = {};
+	bool invariants = false;
 	bool showUnproved = false;
 	smtutil::SMTSolverChoice solvers = smtutil::SMTSolverChoice::All();
 	ModelCheckerTargets targets = ModelCheckerTargets::Default();
