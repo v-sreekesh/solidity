@@ -88,6 +88,7 @@ BOOST_AUTO_TEST_CASE(no_options)
 	expectedOptions.modelChecker.initialize = true;
 	expectedOptions.modelChecker.settings = {
 		ModelCheckerContracts::Default(),
+		/*divModWithSlacks*/true,
 		ModelCheckerEngine::None(),
 		ModelCheckerTargets::Default(),
 		nullopt,
@@ -211,6 +212,7 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 		expectedOptions.modelChecker.initialize = true;
 		expectedOptions.modelChecker.settings = {
 			{{{"contract1.yul", {"A"}}, {"contract2.yul", {"B"}}}},
+			true,
 			{true, false},
 			{{VerificationTargetType::Underflow, VerificationTargetType::DivByZero}},
 			5,
