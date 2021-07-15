@@ -23,17 +23,13 @@ contract C {
 // ====
 // SMTEngine: all
 // ----
-// Warning 4281: (118-130): CHC: Division by zero might happen here.
-// Warning 4984: (134-148): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
-// Warning 4984: (176-189): CHC: Overflow (resulting value larger than 2**256 - 1) might happen here.
 // Warning 6328: (430-450): CHC: Assertion violation happens here.
-// Warning 6328: (478-498): CHC: Assertion violation might happen here.
-// Warning 6328: (502-527): CHC: Assertion violation might happen here.
+// Warning 5840: CHC: 5 verification condition(s) could not be proved. Enable the model checker option "show unproved" to see all of them. Consider choosing a specific contract to be verified in order to reduce the solving problems. Consider increasing the timeout per query.
 // Warning 2661: (134-148): BMC: Overflow (resulting value larger than 2**256 - 1) happens here.
 // Warning 2661: (176-189): BMC: Overflow (resulting value larger than 2**256 - 1) happens here.
 // Warning 2661: (134-148): BMC: Overflow (resulting value larger than 2**256 - 1) happens here.
 // Warning 2661: (134-148): BMC: Overflow (resulting value larger than 2**256 - 1) happens here.
-// Warning 8065: (176-189): BMC: Overflow (resulting value larger than 2**256 - 1) might happen here.
 // Warning 4661: (478-498): BMC: Assertion violation happens here.
 // Warning 2661: (134-148): BMC: Overflow (resulting value larger than 2**256 - 1) happens here.
 // Warning 4661: (502-527): BMC: Assertion violation happens here.
+// Warning 2788: BMC: 1 verification condition(s) could not be proved. Enable the model checker option "show unproved" to see all of them. Consider choosing a specific contract to be verified in order to reduce the solving problems. Consider increasing the timeout per query.
