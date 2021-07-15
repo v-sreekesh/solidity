@@ -86,6 +86,7 @@ static string const g_strMetadata = "metadata";
 static string const g_strMetadataHash = "metadata-hash";
 static string const g_strMetadataLiteral = "metadata-literal";
 static string const g_strModelCheckerContracts = "model-checker-contracts";
+static string const g_strModelCheckerDivModSlacks = "model-checker-div-mod-slacks";
 static string const g_strModelCheckerEngine = "model-checker-engine";
 static string const g_strModelCheckerExtCalls = "model-checker-ext-calls";
 static string const g_strModelCheckerShowUnproved = "model-checker-show-unproved";
@@ -690,6 +691,12 @@ General Information)").c_str(),
 			"and no spaces."
 		)
 		(
+			g_strModelCheckerDivModSlacks.c_str(),
+			po::value<bool>()->default_value(true),
+			"Select whether to replace division and modulo operations"
+			" by multiplication with slack variables."
+		)
+		(
 			g_strModelCheckerEngine.c_str(),
 			po::value<string>()->value_name("all,bmc,chc,none")->default_value("none"),
 			"Select model checker engine."
@@ -1069,6 +1076,12 @@ General Information)").c_str(),
 		m_options.modelChecker.settings.contracts = move(*contracts);
 	}
 
+	if (m_args.count(g_strModelCheckerDivModSlacks))
+	{
+		bool divModSlacks = m_args[g_strModelCheckerDivModSlacks].as<bool>();
+		m_options.modelChecker.settings.divModWithSlacks = divModSlacks;
+	}
+
 	if (m_args.count(g_strModelCheckerEngine))
 	{
 		string engineStr = m_args[g_strModelCheckerEngine].as<string>();
@@ -1081,7 +1094,18 @@ General Information)").c_str(),
 		m_options.modelChecker.settings.engine = *engine;
 	}
 
-<<<<<<< HEAD
+	if (m_args.count(g_strModelCheckerExtCalls))
+	{
+		string mode = m_args[g_strModelCheckerExtCalls].as<string>();
+		optional<ModelCheckerExtCalls> extCallsMode = ModelCheckerExtCalls::fromString(mode);
+		if (!extCallsMode)
+		{
+			serr() << "Invalid option for --" << g_strModelCheckerExtCalls << ": " << mode << endl;
+			return false;
+		}
+		m_options.modelChecker.settings.externalCalls = *extCallsMode;
+	}
+
 	if (m_args.count(g_strModelCheckerShowUnproved))
 	{
 		bool showUnproved = m_args[g_strModelCheckerShowUnproved].as<bool>();
@@ -1098,18 +1122,6 @@ General Information)").c_str(),
 			return false;
 		}
 		m_options.modelChecker.settings.solvers = *solvers;
-=======
-	if (m_args.count(g_strModelCheckerExtCalls))
-	{
-		string mode = m_args[g_strModelCheckerExtCalls].as<string>();
-		optional<ModelCheckerExtCalls> extCallsMode = ModelCheckerExtCalls::fromString(mode);
-		if (!extCallsMode)
-		{
-			serr() << "Invalid option for --" << g_strModelCheckerExtCalls << ": " << mode << endl;
-			return false;
-		}
-		m_options.modelChecker.settings.externalCalls = *extCallsMode;
->>>>>>> smt_trusted
 	}
 
 	if (m_args.count(g_strModelCheckerTargets))
@@ -1130,13 +1142,11 @@ General Information)").c_str(),
 	m_options.metadata.literalSources = (m_args.count(g_strMetadataLiteral) > 0);
 	m_options.modelChecker.initialize =
 		m_args.count(g_strModelCheckerContracts) ||
+		m_args.count(g_strModelCheckerDivModSlacks) ||
 		m_args.count(g_strModelCheckerEngine) ||
-<<<<<<< HEAD
+		m_args.count(g_strModelCheckerExtCalls) ||
 		m_args.count(g_strModelCheckerShowUnproved) ||
 		m_args.count(g_strModelCheckerSolvers) ||
-=======
-		m_args.count(g_strModelCheckerExtCalls) ||
->>>>>>> smt_trusted
 		m_args.count(g_strModelCheckerTargets) ||
 		m_args.count(g_strModelCheckerTimeout);
 	m_options.output.experimentalViaIR = (m_args.count(g_strExperimentalViaIR) > 0);
