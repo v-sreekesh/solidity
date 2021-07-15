@@ -18,6 +18,7 @@
 
 /// Unit tests for solc/CommandLineParser.h
 
+#include "libsolidity/formal/ModelCheckerSettings.h"
 #include <solc/CommandLineParser.h>
 
 #include <test/Common.h>
@@ -91,6 +92,9 @@ BOOST_AUTO_TEST_CASE(no_options)
 		ModelCheckerContracts::Default(),
 		/*divModWithSlacks*/true,
 		ModelCheckerEngine::None(),
+		{},
+		false,
+		false,
 		smtutil::SMTSolverChoice::All(),
 		ModelCheckerTargets::Default(),
 		nullopt,
@@ -158,7 +162,11 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 			"--optimize-runs=1000",
 			"--yul-optimizations=agf",
 			"--model-checker-contracts=contract1.yul:A,contract2.yul:B",
+			"--model-checker-div-mod-slacks=false",
 			"--model-checker-engine=bmc",
+			"--model-checker-ext-calls=trusted",
+			"--model-checker-invariants=true",
+			"--model-checker-show-unproved=true",
 			"--model-checker-solvers=z3,smtlib2",
 			"--model-checker-targets=underflow,divByZero",
 			"--model-checker-timeout=5",
@@ -215,8 +223,11 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 		expectedOptions.modelChecker.initialize = true;
 		expectedOptions.modelChecker.settings = {
 			{{{"contract1.yul", {"A"}}, {"contract2.yul", {"B"}}}},
-			true,
+			false,
 			{true, false},
+			{ModelCheckerExtCalls::Mode::TRUSTED},
+			true,
+			true,
 			{false, true, true},
 			{{VerificationTargetType::Underflow, VerificationTargetType::DivByZero}},
 			5,
