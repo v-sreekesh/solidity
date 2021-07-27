@@ -91,6 +91,8 @@ private:
 		ABITypes& _dynamicTypes,
 		bool _isCompoundType = false
 	);
+
+	static std::optional<ABIType> isFixedPoint(std::string const& type);
 };
 
 }

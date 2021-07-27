@@ -20,6 +20,8 @@
 
 #include <test/libsolidity/util/SoltestErrors.h>
 
+#include <libsolidity/ast/Types.h>
+#include <libsolidity/ast/TypeProvider.h>
 #include <libsolutil/FunctionSelector.h>
 #include <libsolutil/CommonData.h>
 
@@ -200,6 +202,7 @@ bool ContractABIUtils::appendTypesFromName(
 )
 {
 	string type = _functionOutput["type"].asString();
+	optional<ABIType> fixedPointType = isFixedPoint(type);
 	if (isBool(type))
 		_inplaceTypes.push_back(ABIType{ABIType::Boolean});
 	else if (isUint(type))
@@ -245,6 +248,8 @@ bool ContractABIUtils::appendTypesFromName(
 			_dynamicTypes.push_back(ABIType{ABIType::String, ABIType::AlignLeft});
 		}
 	}
+	else if (fixedPointType.has_value())
+		_inplaceTypes.push_back(fixedPointType.value());
 	else if (isBytes(type))
 		return false;
 	else if (isFixedTupleArray(type))
@@ -253,6 +258,21 @@ bool ContractABIUtils::appendTypesFromName(
 		return false;
 
 	return true;
+}
+
+optional<ABIType> ContractABIUtils::isFixedPoint(string const& type)
+{
+	optional<ABIType> fixedPointType;
+	smatch matches;
+	if (regex_match(type, matches, regex{"(.?)fixed(\\d+)x(\\d+)"}))
+	{
+		ABIType abiType(ABIType::SignedFixedPoint);
+		if (matches[1].str() == "u")
+			abiType.type = ABIType::UnsignedFixedPoint;
+		abiType.fractionalDigits = static_cast<unsigned>(std::stoi(matches[3].str()));
+		fixedPointType = abiType;
+	}
+	return fixedPointType;
 }
 
 void ContractABIUtils::overwriteParameters(

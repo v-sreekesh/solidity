@@ -19,7 +19,7 @@
 
 #include <libsolutil/AnsiColorized.h>
 
-#include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <optional>
 #include <stdexcept>
@@ -42,7 +42,7 @@ string TestFunctionCall::format(
 {
 	stringstream stream;
 
-	bool highlight = !matchesExpectation() && _highlight;
+	bool highlight = !valid() && _highlight;
 
 	auto formatOutput = [&](bool const _singleLine)
 	{
@@ -96,7 +96,7 @@ string TestFunctionCall::format(
 
 			if (m_call.omitsArrow)
 			{
-				if (_renderMode == RenderMode::ActualValuesExpectedGas && (m_failure || !matchesExpectation()))
+				if (_renderMode == RenderMode::ActualValuesExpectedGas && (m_failure || !valid()))
 					stream << ws << arrow;
 			}
 			else
@@ -132,8 +132,7 @@ string TestFunctionCall::format(
 			bytes output = m_rawBytes;
 			bool const isFailure = m_failure;
 			result = isFailure ?
-				formatFailure(_errorReporter, m_call, output, _renderMode == RenderMode::ActualValuesExpectedGas, highlight) :
-				matchesExpectation() ?
+				formatFailure(_errorReporter, m_call, output, _renderMode == RenderMode::ActualValuesExpectedGas, highlight) : valid() ?
 					formatRawParameters(m_call.expectations.result) :
 					formatBytesParameters(
 						_errorReporter,
@@ -143,7 +142,7 @@ string TestFunctionCall::format(
 						highlight
 					);
 
-			if (!matchesExpectation())
+			if (!valid())
 			{
 				std::optional<ParameterList> abiParams;
 
@@ -266,6 +265,8 @@ string TestFunctionCall::formatBytesParameters(
 			if (preferredParams)
 			{
 				ContractABIUtils::overwriteParameters(_errorReporter, preferredParams.value(), abiParams.value());
+				if (abiParams.has_value() && !abiParams.value().empty())
+					preferredParams.value().begin()->abiType = abiParams.value().begin()->abiType;
 				os << BytesUtils::formatBytesRange(_bytes, preferredParams.value(), _highlight);
 			}
 		}
@@ -274,6 +275,8 @@ string TestFunctionCall::formatBytesParameters(
 			ParameterList defaultParameters = ContractABIUtils::defaultParameters((_bytes.size() + 31) / 32);
 
 			ContractABIUtils::overwriteParameters(_errorReporter, defaultParameters, _parameters);
+			if (!_parameters.empty())
+				defaultParameters.begin()->abiType = _parameters.begin()->abiType;
 			os << BytesUtils::formatBytesRange(_bytes, defaultParameters, _highlight);
 		}
 		return os.str();
@@ -372,4 +375,14 @@ void TestFunctionCall::reset()
 bool TestFunctionCall::matchesExpectation() const
 {
 	return m_failure == m_call.expectations.failure && m_rawBytes == m_call.expectations.rawBytes();
+}
+
+bool TestFunctionCall::validateFractionDigits() const
+{
+	ErrorReporter errorReporter;
+	std::optional<ParameterList> returnType =
+		ContractABIUtils::parametersFromJsonOutputs(errorReporter, m_contractABI, m_call.signature);
+	if (returnType.has_value() && !returnType.value().empty() && !m_call.expectations.result.empty())
+		return m_call.expectations.result.begin()->abiType.fractionalDigits == returnType.value().begin()->abiType.fractionalDigits;
+	return true;
 }

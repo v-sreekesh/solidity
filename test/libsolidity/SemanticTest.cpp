@@ -453,6 +453,8 @@ TestCase::TestResult SemanticTest::runTest(
 			test.setFailure(!m_transactionSuccessful);
 			test.setRawBytes(move(output));
 			test.setContractABI(m_compiler.contractABI(m_compiler.lastContractName(m_sources.mainSourceFile)));
+			if (!test.valid())
+				success = false;
 		}
 
 		vector<string> effects;
