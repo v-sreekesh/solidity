@@ -9,6 +9,7 @@ Compiler Features:
  * Yul EVM Code Transform: Also pop unused argument slots for functions without return variables (under the same restrictions as for functions with return variables).
  * Yul Optimizer: Move function arguments and return variables to memory with the experimental Stack Limit Evader (which is not enabled by default).
  * Commandline Interface: option ``--pretty-json`` works also with ``--standard--json``.
+ * Commandline Interface: Report optimizer options as invalid in Standard JSON and linker modes instead of ignoring them.
 
 
 Bugfixes:
