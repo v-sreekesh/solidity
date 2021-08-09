@@ -13,6 +13,7 @@ Compiler Features:
  * SMTChecker: new setting to enable/disable encoding of division and modulo with slack variables. The command line option is ``--model-checker-div-mod-slacks`` and the JSON option is ``settings.modelChecker.divModWithSlacks``.
  * Type System: Introduced global ``block.basefee`` for retrieving the base fee of the current block.
  * Yul: Introduced builtin ``basefee()`` for retrieving the base fee of the current block.
+ * EVM: Set the default EVM version to "London".
 
 
 Bugfixes:
