@@ -58,5 +58,10 @@ def SAR(x, y):
 	return y >> x
 
 def BYTE(i, x):
+	bitInt = (BV2Int(i) + 1) * 8
 	bit = (i + 1) * 8
-	return If(UGT(bit, x.size()), BitVecVal(0, x.size()), (LShR(x, (x.size() - bit))) & 0xff)
+	return If(
+		bitInt > x.size(),
+		BitVecVal(0, x.size()),
+		(LShR(x, (x.size() - bit))) & 0xff
+	)
