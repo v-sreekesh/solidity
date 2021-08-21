@@ -269,7 +269,20 @@ map<char, string> const& OptimiserSuite::stepAbbreviationToNameMap()
 
 void OptimiserSuite::validateSequence(string const& _stepAbbreviations)
 {
-	bool insideLoop = false;
+	//bool insideLoop = false;
+	int counter = 0;
+	int stepAbb_length = _stepAbbreviations.size();
+	for (int i=0; i<stepAbb_length; i++)
+	{
+    	if (_stepAbbreviations[i] == '[')
+			counter++;
+    	else if (_stepAbbreviations[i] == ']')
+			counter--;
+    	if (counter < 0)
+			break;
+	}
+
+	if (counter != 0) assertThrow(insideLoop, OptimizerException, "Unbalanced brackets");
 	for (char abbreviation: _stepAbbreviations)
 		switch (abbreviation)
 		{
@@ -306,6 +319,7 @@ void OptimiserSuite::validateSequence(string const& _stepAbbreviations)
 		}
 	assertThrow(!insideLoop, OptimizerException, "Unbalanced brackets");
 }
+
 
 void OptimiserSuite::runSequence(string const& _stepAbbreviations, Block& _ast)
 {
